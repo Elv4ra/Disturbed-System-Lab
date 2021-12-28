@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysqldb-supermarket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysqldb-supermarket
+  template:
+    metadata:
+      labels:
+        app: mysqldb-supermarket
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: supermarket_db
+            - name: MYSQL_USER
+              value: elvara
+            - name: MYSQL_PASSWORD
+              value: "pass"
+            - name: MYSQL_HOST
+              value: "%"
+          image: mysql/mysql-server
+          imagePullPolicy: ""
+          name: mysqldb-supermarket
+          ports:
+            - containerPort: 3306
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysqldb-supermarket
+spec:
+  ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: mysqldb-supermarket

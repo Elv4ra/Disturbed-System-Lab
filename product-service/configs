@@ -1,0 +1,6 @@
+- name: MYSQL_ROOT_PASSWORD
+              value: "password"
+            - name: MYSQL_USER
+              value: "elvara"
+            - name: MYSQL_PASSWORD
+              value: "1111"
