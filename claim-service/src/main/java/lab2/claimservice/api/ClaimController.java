@@ -59,10 +59,10 @@ public class ClaimController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody lab2.claimservice.api.dto.Claim claim) {
-        final String email = claim.getEmail();
+        final long userId = claim.getUserId();
         final String description = claim.getDescription();
         try {
-            final long id = claimService.createClaim(email, description);
+            final long id = claimService.createClaim(userId, description);
             final String location = String.format("/claims/%d", id);
             return ResponseEntity.created(URI.create(location)).build();
         }
@@ -73,11 +73,11 @@ public class ClaimController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable long id, @RequestBody lab2.claimservice.api.dto.Claim claim) {
-        final String email = claim.getEmail();
+        final long userId = claim.getUserId();
         final String description = claim.getDescription();
         final String status = claim.getStatus();
         try {
-            claimService.updateClaim(id, email, description, status);
+            claimService.updateClaim(id, userId, description, status);
             return ResponseEntity.noContent().build();
         }
         catch (IllegalArgumentException e) {

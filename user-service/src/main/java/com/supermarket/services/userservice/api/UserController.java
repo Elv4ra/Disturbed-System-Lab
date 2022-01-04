@@ -25,7 +25,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<User> findById(@PathVariable long id) {
         try {
             final User user = userService.getUserById(id);
@@ -36,7 +36,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userType}")
+    @GetMapping("/userType/{userType}")
     public ResponseEntity<List<User>> findAllUserByType(@PathVariable String userType) {
         List<User> users = userService.getAllUserByType(userType);
         if(users.isEmpty()) {
@@ -45,10 +45,20 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/dto/{id}")
+    public ResponseEntity<com.supermarket.services.userservice.api.dto.User> getDtoById(@PathVariable long id) {
+        try {
+            User user = userService.getUserById(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody com.supermarket.services.userservice.api.dto.User user) {
         final String email = user.getEmail();
-        final String password = user.getPassword();
+        final String password = user.getUserPassword();
         final String firstName = user.getFirstName();
         final String lastName = user.getLastName();
         final String userType = user.getUserType();
@@ -58,14 +68,14 @@ public class UserController {
             return ResponseEntity.created(URI.create(location)).build();
         }
         catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable long id, @RequestBody com.supermarket.services.userservice.api.dto.User user) {
         final String email = user.getEmail();
-        final String password = user.getPassword();
+        final String password = user.getUserPassword();
         final String firstName = user.getFirstName();
         final String lastName = user.getLastName();
         final String userType = user.getUserType();

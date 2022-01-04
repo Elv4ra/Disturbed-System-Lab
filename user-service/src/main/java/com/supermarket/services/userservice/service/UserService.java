@@ -25,10 +25,10 @@ public class UserService {
     }
 
     public long createUser(String email, String password, String firstName, String lastName, String userType) {
-        if (!userType.equals("Client")
-                && !userType.equals("Admin")
-                && !userType.equals("Delivery man")
-                && !userType.equals("Manager")) throw  new IllegalArgumentException("Illegal category argument");
+        if (userType.equals("Client")
+                && userType.equals("Manager")
+                && userType.equals("Admin")
+                && userType.equals("Delivery man")) throw new IllegalArgumentException("Invalid user type");
         final User user = new User(email, password, firstName, lastName, userType);
         final User savedUser = userRepository.save(user);
         return savedUser.getId();
@@ -39,13 +39,13 @@ public class UserService {
         if (maybeUser.isEmpty()) throw new IllegalArgumentException("User not found");
         User user = maybeUser.get();
         if (email != null && !email.isBlank()) user.setEmail(email);
-        if (password != null && !password.isBlank()) user.setPassword(password);
+        if (password != null && !password.isBlank()) user.setUserPassword(password);
         if (firstName != null && !firstName.isBlank()) user.setFirstName(firstName);
         if (lastName != null && !lastName.isBlank()) user.setLastName(lastName);
-        if (userType != null && !userType.isBlank() &&(userType.equals("Client")
+        if (userType.equals("Client")
+                || userType.equals("Manager")
                 || userType.equals("Admin")
-                || userType.equals("Delivery man")
-                || userType.equals("Manager"))) user.setUserType(userType);
+                || userType.equals("Delivery man")) user.setUserType(userType);
         userRepository.save(user);
     }
 
